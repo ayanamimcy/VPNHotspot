@@ -240,3 +240,11 @@ The following Android system binaries are assumed to be bundled and executable:
 * `/system/bin/ndc` (`ipfwd`, `nat`);
 * `/system/bin/settings` (`put global`);
 * `/system/bin/linker` or `/system/bin/linker64` (`path.zip!/program`).
+
+### SCR01 Android 11 compatibility
+
+The local SCR01 AVK2 workaround is documented in [docs/scr01-compat.md](docs/scr01-compat.md).
+Only Samsung SCR01 / API 30 / `SCR01KDU1AVK2` uses tether-state broadcasts instead of the
+vendor callback. Known settings-provider registration failures are logged; other exceptions
+still propagate. No additional settings permission, hidden API, routing rule, or daemon change
+is introduced. Callback cleanup is skipped only when that collector's registration was rejected.

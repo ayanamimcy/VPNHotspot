@@ -1,0 +1,8 @@
+/original.apk
+/decoded/
+/unsigned.apk
+/*.p12
+/*.jks
+/*.keystore
+/signing.pass
+/compat2-helper.smali

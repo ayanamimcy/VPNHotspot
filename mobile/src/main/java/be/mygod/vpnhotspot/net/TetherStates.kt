@@ -84,7 +84,9 @@ data class TetherStates(
                     localOnly.toPersistentIfaceSet(), nextErrored.build())
                 scheduleDispatch()
             }
-            if (Build.VERSION.SDK_INT < 30) {
+            // SCR01 AVK2 rejects Samsung's public callback while writing MHS_DMZ_ENABLED.
+            // Keep the existing sticky-broadcast owner and its cancellation cleanup there.
+            if (Build.VERSION.SDK_INT < 30 || Scr01CallbackCompat.useTetherStateBroadcast()) {
                 app.registerReceiver(receiver, IntentFilter(ACTION_TETHER_STATE_CHANGED))
                 broadcastRegistered = true
             } else {

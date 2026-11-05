@@ -407,9 +407,17 @@ object TetheringManagerCompat {
             if (Build.VERSION.SDK_INT >= 31) Timber.w(e)
             LegacyCallback()
         }
-        Services.tethering.registerTetheringEventCallback(InPlaceExecutor, callback)
+        val registered = try {
+            Services.tethering.registerTetheringEventCallback(InPlaceExecutor, callback)
+            true
+        } catch (e: RuntimeException) {
+            if (!Scr01CallbackCompat.isExpectedRegistrationFailure(e)) throw e
+            Timber.w(e, "SCR01 AVK2 callback rejected; tether-state broadcasts and interface monitoring remain active")
+            false
+        }
         return@binderCallbackFlow {
-            try {
+            // A callback whose registration was rejected must not be unregistered.
+            if (registered) try {
                 Services.tethering.unregisterTetheringEventCallback(callback)
             } catch (e: IllegalStateException) {
                 if (e.cause !is DeadObjectException) throw e
